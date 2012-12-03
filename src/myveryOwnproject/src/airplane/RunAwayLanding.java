@@ -203,11 +203,12 @@ public class RunAwayLanding extends JComponent {
 		return true;
 	}
 	
-	public boolean reachedTheFlag(int i){//nota ter um id para o aviao e bandeira para qd coincidirdesaparecer a bandeira e dar nova destination
+	public boolean reachedTheFlag(){//nota ter um id para o aviao e bandeira para qd coincidirdesaparecer a bandeira e dar nova destination
 		for (Plane airplane : aircraftFleet) {
 			for(Flag flag: flags){
 			if (flag.getFlagCell() == airplane.getPlaneCell() && flag.getId()==airplane.getID()) {//
-			
+			System.out.println("REACHED THE FLAG");
+			flag.setInvisible();//NOVO
 				return true;
 			}
 			}

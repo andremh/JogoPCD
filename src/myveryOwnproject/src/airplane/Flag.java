@@ -8,14 +8,15 @@ public class Flag {
 	Toolkit toolkit = Toolkit.getDefaultToolkit();
 	Image flag;
 	private Cell cell;
-	private int id;
-	public Flag(AirSpace asp, Cell cell,int id) {
+	private int planeId;
+	
+	public Flag(AirSpace asp, Cell cell,int planeId) {//NOVO
 
 
 
 		flag = toolkit.createImage("flag.png");
 		this.cell = cell;
-		this.id=id;
+		this.planeId=planeId;//NOVO
 
 
 
@@ -28,12 +29,18 @@ public class Flag {
 
 
 	public Cell getFlagCell() {
-		// TODO Auto-generated method stub
+	
 		return cell;
 	}
 
 	public int getId() {
-		return id;
+		return planeId;
+	}
+
+
+	public void setInvisible() {//REVER CORRIGIR
+		flag = null;
+		
 	}
 
 

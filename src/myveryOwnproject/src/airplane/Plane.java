@@ -47,7 +47,7 @@ public class Plane extends Thread {
 		planeRed = toolkit.createImage("planeRed.png");
 
 
-		this.id=id++;
+		this.id=id++;//NOVO
 		this.asp = asp;
 		this.cell = cell;
 		destinationCell = cell.getCelula();
@@ -85,7 +85,7 @@ public class Plane extends Thread {
 
 			sleep(700);
 			plane = planeDown;
-			asp.getRwl().repaint();
+			asp.getRwl().repaint();//que que isto ta aqui a fazer???
 			sleep(700);
 			plane = planeBack;
 			asp.getRwl().repaint();
@@ -118,11 +118,13 @@ public class Plane extends Thread {
 				if (cell.getCelula() != destinationCell) {
 					sinalMove = 0;
 					move();
+					asp.getRwl().reachedTheFlag();//TESTAR
 					System.out.println("cell: " + cell.getCelula() + ", NextCell: " + nextCell);
 					if (asp.isEmpty(nextCell) ) {
 						System.out.println("cell: " + cell.getCelula() + ", " + nextCell);
 						sinalMove = 1;
 						move();
+						asp.getRwl().reachedTheFlag();//TESTAR
 					} else{
 						gotStuck=true;
 						moveInCir();
@@ -285,7 +287,7 @@ public class Plane extends Thread {
 
 	}
 
-	public int getID(){
+	public int getID(){//NOVO
 		return id;
 	}
 
