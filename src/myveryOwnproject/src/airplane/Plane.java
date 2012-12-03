@@ -18,6 +18,7 @@ public class Plane extends Thread {
 	int colunmNumber;
 	private int nextCell;
 	private int destinationCell;
+	private int temporaryDestination=-1;//NOVO
 	private boolean clicked = false;
 	private int fuel = 100;
 	private boolean hasDestination = false;
@@ -28,7 +29,8 @@ public class Plane extends Thread {
 	private Image planeRed;
 	private int sinalMove;
 	private boolean gotStuck=false;
-	private static  int id; //(NOVO
+	private static  int id =0; //(NOVO
+	private int x=-2;//NOVO TESTE
 	/**
 	 * @param asp
 	 * @param cell
@@ -47,7 +49,7 @@ public class Plane extends Thread {
 		planeRed = toolkit.createImage("planeRed.png");
 
 
-		this.id=id++;//NOVO
+	id=	id++;//NOVO
 		this.asp = asp;
 		this.cell = cell;
 		destinationCell = cell.getCelula();
@@ -115,7 +117,7 @@ public class Plane extends Thread {
 				timeGoesBy();
 				sleep(1000);
 
-				if (cell.getCelula() != destinationCell) {
+				if (cell.getCelula() != destinationCell) {//novo a testar
 					sinalMove = 0;
 					move();
 					asp.getRwl().reachedTheFlag();//TESTAR
@@ -160,6 +162,21 @@ public class Plane extends Thread {
 	}
 
 	public int move() {
+		
+		if(temporaryDestination!=-1 ){//NOVO
+			destinationCell=temporaryDestination;//se houver temporario vai para o temporario, senao vai para o definitivo
+		
+		}
+//		
+//		//}else if (asp.getRwl().reachedTheFlag()){
+//		else	destinationCell = x;
+	//	}
+//		else 	{
+//			destinationCell=x;//NOVO
+//		System.out.println("o valor de x é :  " +x);
+//		}
+		
+		
 		// destinationCell=150;//testando!!
 		// System.out.println("encontra o X: " + cell.getCelula() + "%20: " + (cell.getCelula() % cell.getNumColumns()));
 		// System.out.println("encontra o Y: " + cell.getCelula() + "/20: " + (cell.getCelula() / cell.getNumColumns()));
@@ -176,7 +193,7 @@ public class Plane extends Thread {
 		if (Math.abs(dx) > Math.abs(dy)) {
 			// if (totalY > totalX && (dy != 0)) {
 			// || dx !=0 ou && dy==0
-			System.out.println("1) dx>dy: " + dx + ">" + dy);
+			//System.out.println("1) dx>dy: " + dx + ">" + dy);
 			if (dx > 0) {
 				// System.out.println("dx>0: " + dx);
 				// 3
@@ -194,7 +211,7 @@ public class Plane extends Thread {
 					nextCell = cell.getCelula() - 1;
 			}
 		} else {
-			System.out.println("2) dy>0: " + dy);
+		//	System.out.println("2) dy>0: " + dy);
 			if (dy > 0) {
 
 				if (sinalMove == 1) {
@@ -210,6 +227,7 @@ public class Plane extends Thread {
 					nextCell = cell.getCelula() - cell.getNumColumns();
 			}
 		}
+		 
 		return nextCell;
 
 	}
@@ -220,9 +238,23 @@ public class Plane extends Thread {
 
 	public void setDestination(int destination) {
 		destinationCell = destination;
+	x=destinationCell;//NOVO
 	}
 
-	public boolean airplaneIsSelected(Point point) {
+	public int getDestinationCellNumber() {
+		return x;//TESTE NOVO
+	}
+
+
+public void setTemporaryDestination(int td){//NOVO
+	temporaryDestination=td;
+}
+
+
+
+
+
+public boolean airplaneIsSelected(Point point) {
 		int col = (int) (point.getX() / (asp.getRwl().getWidth() / asp
 				.getNumColumns()));// divide coord x pla largura cada celula->
 		// indica qual a coluna onde estou
@@ -254,10 +286,10 @@ public class Plane extends Thread {
 
 	public void timeGoesBy() {
 
-		Timer time = new Timer(30000, new ActionListener() {
+		Timer time = new Timer(50000, new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
-				fuel--;
+				fuel=fuel-75;//Novo
 
 				System.out.println("You are out of fuel!");
 
@@ -272,9 +304,10 @@ public class Plane extends Thread {
 				// plane=mage;
 				// POSSO APROVEITAR ESTE FILTRO PARA QD EM MOVIMENTO FICAR COM
 				// MENOS COR
-				plane = planeRed;// NOVO
+				//plane = planeRed;// NOVO
 				asp.setScreen("The plane is out of fuel!");// NOVO
-
+				if(fuel<30)
+					plane=planeRed;
 
 			}
 
@@ -282,7 +315,8 @@ public class Plane extends Thread {
 		time.start();
 	}
 
-	public int getFuelLevel() {
+	public int getFuelLevel() {//NOVO
+		
 		return fuel;
 
 	}
@@ -295,5 +329,9 @@ public class Plane extends Thread {
 	public boolean gotStuck() {
 		// TODO Auto-generated method stub
 		return gotStuck;
+	}
+	
+	public void setStuck(boolean b){
+		gotStuck=b;
 	}
 }

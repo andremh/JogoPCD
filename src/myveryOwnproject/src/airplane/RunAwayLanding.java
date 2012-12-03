@@ -87,67 +87,7 @@ public class RunAwayLanding extends JComponent {
 		int dx = getWidth() / (nCol);// largura cada celula
 		int dy = getHeight() / (nLines);// altura cada celula
 
-		/*
-		 * Graphics2D g2d=(Graphics2D)g; g2d.translate(170, 0);
-		 * g2d.rotate(Math.PI);
-		 * 
-		 * g2d.drawImage(plane.getImage(), (int)
-		 * ((plane.getPlaneCell().getCelula() % nCol) * dx),//desenhar 1 aviao a
-		 * andar (int) ((plane.getPlaneCell().getCelula() / nCol) * dy), dx, dy,
-		 * this);
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
-		 * http://beginwithjava.blogspot.pt/2009/02/rotating-image-with-java.html
-		 */
-
-		// exemplo de como rodar a imagem sobre o proprio eixo
-		// public void paintComponent(Graphics g){
-		// Graphics2D g2d=(Graphics2D)g; // Create a Java2D version of g.
-		// g2d.translate(170, 0); // Translate the center of our coordinates.
-		// g2d.rotate(1); // Rotate the image by 1 radian.
-		// g2d.drawImage(image, 0, 0, 200, 200, this);
-		// }
-		//			
-
-		// selected=plane.getPlaneCell().getCelula(); ambos representam o numero
-		// da celula , o ultimo nao é o seleccionado
-
-		// g.drawImage(plane.getImage(), (int)
-		// ((plane.getPlaneCell().getCelula() % nCol) * dx),//desenhar 1 aviao a
-		// andar
-		// (int) ((plane.getPlaneCell().getCelula() / nCol) * dy), dx, dy,
-		// this);
-		//
-		//
-		// g.drawImage(plane1.getImage(), (int)
-		// ((plane1.getPlaneCell().getCelula() % nCol) * dx),//desenhar 1 aviao
-		// a andar
-		// (int) ((plane1.getPlaneCell().getCelula() / nCol) * dy), dx, dy,
-		// this);
-
-		// for(int i=0;i<2;i++){
-		// Plane p1= insertPlanesRandomLy(i);
-		// //p1.start();
-		// // g.drawImage(p1.getImage(), (int) ((p1.getPlaneCell().getCelula() %
-		// nCol) * dx),//desenhar 1 aviao a andar
-		// // (int) ((p1.getPlaneCell().getCelula() / nCol) * dy), dx, dy,
-		// this);
-		//
-		// //System.out.println((int) ((p1.getPlaneCell().getCelula() % nCol) *
-		// dx)+":" + (int) ((p1.getPlaneCell().getCelula() % nCol) * dy));
-		// }
-
-		// System.out.println("Numero da celula que dei ao plane->"+(plane.getPlaneCell().getCelula()+"")+"coordenada x "+(int)
-		// ((plane.getPlaneCell().getCelula() % nCol) * dx)
-		// +"coordenada y "+(int) ((plane.getPlaneCell().getCelula() % nCol) *
-		// dy));
+		
 
 		// DRAW AIRPORTS
 		//7)alterado
@@ -206,10 +146,22 @@ public class RunAwayLanding extends JComponent {
 	public boolean reachedTheFlag(){//nota ter um id para o aviao e bandeira para qd coincidirdesaparecer a bandeira e dar nova destination
 		for (Plane airplane : aircraftFleet) {
 			for(Flag flag: flags){
-			if (flag.getFlagCell() == airplane.getPlaneCell() && flag.getId()==airplane.getID()) {//
+			//System.out.println("REACHED FLAG!!!!!!!!!!!");
+			System.out.println("celula da flag"+ flag.getFlagCell().getCelula());
+			System.out.println("celula do aviao" +airplane.getPlaneCell().getCelula());
+			System.out.println("id da flag" +flag.getID());
+			System.out.println("id do aviao" +airplane.getID());
+			
+				if (flag.getFlagCell().getCelula() == airplane.getPlaneCell().getCelula() && flag.getID()==airplane.getID()) {//
+					airplane.setStuck(false);//qd chega a bandeira nao esta mais stuck saiu dessa situaçao
+					flag.setInvisible();//NOVO
 			System.out.println("REACHED THE FLAG");
-			flag.setInvisible();//NOVO
-				return true;
+			airplane.setTemporaryDestination(-1);//NOVO
+			airplane.setDestination(airplane.getDestinationCellNumber());//NOVO 
+			//airplane.setDestination(airplane.getDestinationCellNumber());//NOVO-> mudar 	
+			//temporaryDestination=selectedDestination;//NOVO testar
+			System.out.println("Selected destination is" + airplane.getDestinationCellNumber());
+			return true;
 			}
 			}
 		}
@@ -233,27 +185,29 @@ public class RunAwayLanding extends JComponent {
 	}
 
 	public void setDestination(Point point) {
-
 		int col = (int) (point.getX() / (getWidth() / nCol));// divide coord x
 		// pla largura cada celula-> indica qual a coluna onde estou
 		int lin = (int) (point.getY() / (getHeight() / nLines));// ->indica qual
 
-		// a linha onde estou a contar cima, =0
-		selectedDestination = col + lin * nCol;// ->selected da me o numero de
 		// cada celula seleciona que vai de 0 ao nr de linhas dado ao
 		// inicio ao quadrado (linhasi*linhasi)
-		System.out
-		.println("selecionei a celula PARA DESTINO DENTRO DO METODO SET DESTINATION "
-				+ selectedDestination
-				+ ": que esta na coluna= "
-				+ col
-				+ ", e na linha= " + lin);
+		
+//		System.out
+//		.println("selecionei a celula PARA DESTINO DENTRO DO METODO SET DESTINATION "
+//				+ selectedDestination
+//				+ ": que esta na coluna= "
+//				+ col
+//				+ ", e na linha= " + lin);
 
 
 		for (Plane airplane : aircraftFleet) {
-			Cell cell;
+		Cell destinationCell;
+			Cell temporaryCell;
 			if(airplane.isClicked()&&!airplane.gotStuck()){
-				cell = new Cell((int)(selectedDestination%nCol),(int) (selectedDestination/nCol), nCol);
+				
+				// a linha onde estou a contar cima, =0
+				selectedDestination = col + lin * nCol;// ->selected da me o numero de
+				destinationCell = new Cell((int)(selectedDestination%nCol),(int) (selectedDestination/nCol), nCol);//NOVO
 
 				airplane.setDestination(selectedDestination);
 				//				flag = new Flag(asp,cell );
@@ -266,15 +220,19 @@ public class RunAwayLanding extends JComponent {
 
 
 
-				cell = new Cell((int)(temporaryDestination%nCol),(int) (temporaryDestination/nCol), nCol);
-				airplane.setDestination(temporaryDestination);
-				flag = new Flag(asp,cell, airplane.getID() );
+				temporaryCell = new Cell((int)(temporaryDestination%nCol),(int) (temporaryDestination/nCol), nCol);//NOVO
+				//airplane.setDestination(temporaryDestination);
+				airplane.setTemporaryDestination(temporaryDestination);
+			//airplane.setDestination(temporaryDestination);//NOVO ???
+				flag = new Flag(asp,temporaryCell, airplane.getID() );//mudei de cell 
 				flags.add(flag);
-				System.out
-				.println("NO METODO SET TEMPORARY DESTINATION FOI ATRIBUIDO DESTINO AO AVIAO CLICADO");
+
+				
+//				System.out
+//				.println("NO METODO SET TEMPORARY DESTINATION FOI ATRIBUIDO DESTINO AO AVIAO CLICADO");
 
 			}
-			System.out.println("aeroporto STUCK???" + airplane.gotStuck());
+			System.out.println("aviao STUCK???" + airplane.gotStuck());
 			airplane.setNotClicked();
 		}
 		repaint();		
@@ -295,11 +253,11 @@ public class RunAwayLanding extends JComponent {
 				// fazer com todos os avioes
 				airplanes.airplaneIsSelected(point);// diz ao aviao que esta
 				// clicado!!
-				System.out
-				.println("dentro do IS SELECTED:"
-						+ "o selected imprime:"
-						+ selected
-						+ "devolve true pq a selecionada é a mesma onde está o aviao");
+//				System.out
+//				.println("dentro do IS SELECTED:"
+//						+ "o selected imprime:"
+//						+ selected
+//						+ "devolve true pq a selecionada é a mesma onde está o aviao");
 				return true;
 			}
 		}
@@ -329,29 +287,3 @@ public class RunAwayLanding extends JComponent {
 	}
 
 }
-/*
- * import java.awt.Color; import java.awt.Graphics; import java.awt.Point;
- * import javax.swing.JComponent; public class Board extends JComponent {
- * private int nLines; private int nCol; private int selected = -1; public
- * Board(int nLines, int nCol) { super(); this.nLines = nLines; this.nCol =
- * nCol; }
- * 
- * @Override protected void paintComponent(Graphics g) {
- * super.paintComponent(g); int dx = getWidth() / (nCol); int dy = getHeight() /
- * (nLines); for (int i = 1; i < nLines; i++) { g.drawLine(0, i * dy,
- * getWidth(), i * dy); } for (int i = 1; i < nCol; i++) { g.drawLine(i * dx, 0,
- * i * dx, getHeight()); } for (int i = 0; i < nCol * nLines; i++) { String
- * label = "" + i; int w = g.getFontMetrics().stringWidth(label) / 2; int h =
- * g.getFontMetrics().getDescent(); int x = (int) ((i % nCol + .5) * dx - w);
- * int y = (int) ((i / nCol + .5) * dy + h); g.drawString(label, x, y); } if
- * (selected >= 0) { g.setColor(Color.DARK_GRAY); g.fillRect((int) ((selected %
- * nCol) * dx), (int) ((selected / nCol) * dy), dx, dy); g.setColor(Color.red);
- * String label = selected + ""; int w = g.getFontMetrics().stringWidth(label) /
- * 2; int h = g.getFontMetrics().getDescent(); int x = (int) ((selected % nCol +
- * .5) * dx - w); int y = (int) ((selected / nCol + .5) * dy + h);
- * g.drawString(label, x, y); g.setColor(Color.black); } } public void
- * setSelected(Point point) { int col = (int) (point.getX() / (getWidth() /
- * nCol)); int lin = (int) (point.getY() / (getHeight() / nLines)); selected =
- * col + lin * nCol; System.out.println(selected + ": col= " + col + ", lin= " +
- * lin); repaint(); } }
- */

@@ -33,7 +33,7 @@ public class Flag {
 		return cell;
 	}
 
-	public int getId() {
+	public int getID() {
 		return planeId;
 	}
 
